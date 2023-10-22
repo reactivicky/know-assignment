@@ -1,10 +1,14 @@
-const users = require("../data");
+const fs = require("fs").promises;
+const path = require("path");
 
 const getUser = async (req, res) => {
   const { id } = req.params;
   try {
     // We should do something like this if we are using mongoose
     // const user = await User.findById(id);
+    const users = JSON.parse(
+      await fs.readFile(path.join(__dirname, "../data.json"), "utf8")
+    );
     const user = users.find((u) => u.id === id);
     // We can avoid selecting password in moongoose user schema
     delete user.password;
@@ -15,7 +19,8 @@ const getUser = async (req, res) => {
         user,
       },
     });
-  } catch (exports) {
+  } catch (e) {
+    console.log(e);
     res.status(404).json({
       status: "failed",
       message: `No user with id ${id}`,
@@ -32,24 +37,32 @@ const updateUser = async (req, res) => {
     //   new: true,
     //   runValidators: true,
     // });
-
-    let user = users.find((u) => u.id === id);
-    user = { ...user, firstName, lastName, planet, designation };
-
-    if (!user) {
-      res.status(404).json({
+    const users = JSON.parse(
+      await fs.readFile(path.join(__dirname, "../data.json"), "utf8")
+    );
+    const userIndex = users.findIndex((u) => u.id === id);
+    if (userIndex === -1) {
+      return res.status(404).json({
         status: "failed",
         message: `No user with id ${id}`,
       });
     }
+    users[userIndex] = {
+      ...users[userIndex],
+      firstName,
+      lastName,
+      planet,
+      designation,
+    };
+    await fs.writeFile(path.join(__dirname, "../data.json"), users);
 
     res.status(200).json({
       status: "success",
       data: {
-        user,
+        user: users[userIndex],
       },
     });
-  } catch (exports) {
+  } catch (e) {
     res.status(404).json({
       status: "failed",
       message: `No user with id ${id}`,

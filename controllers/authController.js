@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const users = require("../data");
+const fs = require("fs").promises;
+const path = require("path");
 
 // Should be in env file
 const accessTokenSecret =
@@ -29,6 +30,9 @@ const authenticateToken = async (req, res, next) => {
 
     // We should do something like this if we are using mongoose
     // const user = await User.findOne({ _id: id });
+    const users = JSON.parse(
+      await fs.readFile(path.join(__dirname, "../data.json"), "utf8")
+    );
 
     const user = users.find((u) => u.id === id);
     if (!user) {
@@ -52,6 +56,9 @@ const loginUser = async (req, res) => {
 
     // We should do something like this if we are using mongoose
     // const user = await User.findOne({ userName }).select('+password');
+    const users = JSON.parse(
+      await fs.readFile(path.join(__dirname, "../data.json"), "utf8")
+    );
 
     const user = users.find((u) => u.userName === userName);
 
