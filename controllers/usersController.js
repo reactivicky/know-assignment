@@ -54,7 +54,11 @@ const updateUser = async (req, res) => {
       planet,
       designation,
     };
-    await fs.writeFile(path.join(__dirname, "../data.json"), users);
+    console.log(users);
+    await fs.writeFile(
+      path.join(__dirname, "../data.json"),
+      JSON.stringify(users)
+    );
 
     res.status(200).json({
       status: "success",
