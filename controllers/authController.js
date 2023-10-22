@@ -5,17 +5,17 @@ const jwt = require("jsonwebtoken");
 const users = [
   {
     id: "asdfasdf8798asdf",
-    username: "Vignesh",
+    userName: "Vignesh",
     password: "$2b$10$Fyg7V9U88yG89aVt5olndOM/aDpa6JgwVqMdvpDb1vmWUsuS4Lji2",
   },
   {
     id: "asdfasdf8798asdf",
-    username: "Vignesh1",
+    userName: "Vignesh1",
     password: "$2b$10$c/3OuIFj7NuCzIqGJwNWRuTII9ZQ/rvIVNamM9KaCeQ0RiuQr3WJi",
   },
   {
     id: "asdfasdf8798asdf",
-    username: "Vignesh2",
+    userName: "Vignesh2",
     password: "$2b$10$I7B26fA/v2LNS5Td5K91oeuF.McOrJ.bhqE89UFKbByQbtprv5cS2",
   },
 ];
@@ -33,12 +33,12 @@ const generateAccessToken = (id) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { userName, password } = req.body;
 
     // We should do something like this if we are using mongoose
-    // const user = await User.findOne({ username }).select('+password');
+    // const user = await User.findOne({ userName }).select('+password');
 
-    const user = users.find((u) => u.username === username);
+    const user = users.find((u) => u.userName === userName);
 
     if (!user) {
       return res.status(400).json({
