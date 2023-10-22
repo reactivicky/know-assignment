@@ -63,7 +63,7 @@ const loginUser = async (req, res) => {
     const user = users.find((u) => u.userName === userName);
 
     if (!user) {
-      return res.status(400).json({
+      return res.status(404).json({
         status: "failed",
         message: "No user found",
       });
